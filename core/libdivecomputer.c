@@ -403,6 +403,9 @@ sample_cb(dc_sample_type_t type, dc_sample_value_t value, void *userdata)
 		if (nsensor > dc->no_o2sensors)
 			dc->no_o2sensors = nsensor;
 		break;
+	case DC_SAMPLE_VOTED_PPO2:
+        sample->votedpo2.mbar = lrint(value.ppo2 * 1000);
+	    break;
 	case DC_SAMPLE_CNS:
 		sample->cns = cns = lrint(value.cns * 100);
 		break;

@@ -887,6 +887,8 @@ static void try_to_fill_sample(struct sample *sample, const char *name, char *bu
 		return;
 	if (MATCH("sensor3.sample", double_to_o2pressure, &sample->o2sensor[2])) // up to 3 CCR sensors
 		return;
+	if (MATCH("votedpo2.sample", double_to_o2pressure, &sample->votedpo2)) // the voted po2
+		return;
 	if (MATCH("po2.sample", double_to_o2pressure, &sample->setpoint))
 		return;
 	if (MATCH("heartbeat", get_uint8, &sample->heartbeat))

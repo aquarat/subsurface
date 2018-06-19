@@ -529,9 +529,14 @@ static void parse_sample_keyvalue(void *_sample, const char *key, const char *va
 		sample->o2sensor[2].mbar = p.mbar;
 		return;
 	}
-	if (!strcmp(key, "o2pressure")) {
-		pressure_t p = get_pressure(value);
-		sample->pressure[1].mbar = p.mbar;
+    if (!strcmp(key, "o2pressure")) {
+        pressure_t p = get_pressure(value);
+        sample->pressure[1].mbar = p.mbar;
+        return;
+    }
+	if (!strcmp(key, "votedpo2")) {
+        pressure_t p = get_pressure(value);
+        sample->votedpo2.mbar = p.mbar;
 		return;
 	}
 	if (!strcmp(key, "heartbeat")) {

@@ -174,6 +174,7 @@ struct sample                         // BASE TYPE BYTES  UNITS    RANGE        
 	pressure_t pressure[MAX_SENSORS]; // int32_t    4    mbar   (0-2 Mbar)             cylinder pressures (main and CCR o2)
 	o2pressure_t setpoint;            // uint16_t   2    mbar   (0-65 bar)             O2 partial pressure (will be setpoint)
 	o2pressure_t o2sensor[3];         // uint16_t   6    mbar   (0-65 bar)             Up to 3 PO2 sensor values (rebreather)
+	o2pressure_t votedpo2;            // uint16_t   2    mbar   (0-65 bar)             O2 partial pressure (as displayed by DC)
 	bearing_t bearing;                // int16_t    2  degrees  (-1 no val, 0-360 deg) compass bearing
 	uint8_t sensor[MAX_SENSORS];      // uint8_t    1  sensorID (0-255)                ID of cylinder pressure sensor
 	uint16_t cns;                     // uint16_t   1     %     (0-64k %)              cns% accumulated

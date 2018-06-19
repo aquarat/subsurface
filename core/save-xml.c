@@ -281,6 +281,11 @@ static void save_sample(struct membuffer *b, struct sample *sample, struct sampl
 		old->o2sensor[2] = sample->o2sensor[2];
 	}
 
+	if (sample->votedpo2.mbar > 0 && sample->votedpo2.mbar != old->votedpo2.mbar) {
+		put_milli(b, " votedpo2='", sample->votedpo2.mbar, " bar'");
+		old->votedpo2.mbar = sample->votedpo2.mbar;
+	}
+
 	if (sample->setpoint.mbar != old->setpoint.mbar) {
 		put_milli(b, " po2='", sample->setpoint.mbar, " bar'");
 		old->setpoint = sample->setpoint;

@@ -285,6 +285,11 @@ static void save_sample(struct membuffer *b, struct sample *sample, struct sampl
 		put_format(b, ":%d", sensor);
 	}
 
+	if (sample->votedpo2.mbar > 0 && sample->votedpo2.mbar != old->votedpo2.mbar) {
+        put_milli(b, " votedpo2=", sample->votedpo2.mbar, "bar");
+		old->votedpo2.mbar = sample->votedpo2.mbar;
+	}
+
 	/* the deco/ndl values are stored whenever they change */
 	if (sample->ndl.seconds != old->ndl.seconds) {
 		put_format(b, " ndl=%u:%02u", FRACTION(sample->ndl.seconds, 60));

@@ -582,9 +582,13 @@ struct plot_data *populate_plot_entries(struct dive *dive, struct divecomputer *
 		entry->cns = sample->cns;
 		if (dc->divemode == CCR || (dc->divemode == PSCR && dc->no_o2sensors)) {
 			entry->o2pressure.mbar = entry->o2setpoint.mbar = sample->setpoint.mbar;     // for rebreathers
+            if (entry->votedpo2.mbar > 0) {
+                entry->o2pressure.mbar = entry->votedpo2.mbar;
+            }
 			entry->o2sensor[0].mbar = sample->o2sensor[0].mbar; // for up to three rebreather O2 sensors
 			entry->o2sensor[1].mbar = sample->o2sensor[1].mbar;
 			entry->o2sensor[2].mbar = sample->o2sensor[2].mbar;
+			entry->votedpo2.mbar = sample->votedpo2.mbar;
 		} else {
 			entry->pressures.o2 = sample->setpoint.mbar / 1000.0;
 		}
@@ -1165,6 +1169,12 @@ void calculate_deco_information(struct deco_state *ds, struct deco_state *planne
  */
 static int calculate_ccr_po2(struct plot_data *entry, struct divecomputer *dc)
 {
+	/* If the DC reported a voted PO2/Average PO2, use that.
+	 */
+	if (entry->votedpo2.mbar > 0) {
+		return entry->votedpo2.mbar;
+	}
+
 	int sump = 0, minp = 999999, maxp = -999999;
 	int diff_limit = 100; // The limit beyond which O2 sensor differences are considered significant (default = 100 mbar)
 	int i, np = 0;
@@ -1284,6 +1294,8 @@ void fill_o2_values(struct dive *dive, struct divecomputer *dc, struct plot_info
 	}
 }
 
+// take me out
+
 #ifdef DEBUG_GAS
 /* A CCR debug function that writes the cylinder pressure and the oxygen values to the file debug_print_profiledata.dat:
  * Called in create_plot_info_new()
@@ -1301,7 +1313,7 @@ static void debug_print_profiledata(struct plot_info *pi)
 			entry = pi->entry + i;
 			fprintf(f1, "%d gas=%8d %8d ; dil=%8d %8d ; o2_sp= %d %d %d %d PO2= %f\n", i, SENSOR_PRESSURE(entry),
 				INTERPOLATED_PRESSURE(entry), O2CYLINDER_PRESSURE(entry), INTERPOLATED_O2CYLINDER_PRESSURE(entry),
-				entry->o2pressure.mbar, entry->o2sensor[0].mbar, entry->o2sensor[1].mbar, entry->o2sensor[2].mbar, entry->pressures.o2);
+				entry->o2pressure.mbar, entry->o2sensor[0].mbar, entry->o2sensor[1].mbar, entry->o2sensor[2].mbar, entry->pressures.o2, entry->votedpo2.mbar);
 		}
 		fclose(f1);
 	}
